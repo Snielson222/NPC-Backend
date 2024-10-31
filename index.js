@@ -59,5 +59,41 @@ app.post('/api/generate-npc', async (req, res) => {
   }
 });
 
+// Chat with NPC endpoint
+app.post('/api/chat', async (req, res) => {
+    try {
+      const { npcDetails, userMessage } = req.body;
+      const messages = [
+        {
+          role: "system",
+          content: `You are a ${npcDetails.race} ${npcDetails.class} with the backstory: "${npcDetails.backstory}". Answer as if you are this character.`,
+        },
+        {
+          role: "user",
+          content: userMessage,
+        },
+      ];
+  
+      const response = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: "gpt-3.5-turbo",
+          messages: messages,
+          max_tokens: 100,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+          },
+        }
+      );
+  
+      res.json({ npcResponse: response.data.choices[0].message.content.trim() });
+    } catch (error) {
+      console.error("Error with NPC chat:", error.response ? error.response.data : error.message);
+      res.status(500).send("Error with NPC chat");
+    }
+  });
+  
 // Start the server
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
