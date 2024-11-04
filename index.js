@@ -94,6 +94,37 @@ app.post('/api/chat', async (req, res) => {
       res.status(500).send("Error with NPC chat");
     }
   });
+
+// Image generation endpoint
+app.post('/api/generate-image', async (req, res) => {
+    try {
+      const { npcDetails } = req.body;
+  
+      // Construct a descriptive prompt for DALL-E
+      const prompt = `A detailed 1024x1024 illustration of a ${npcDetails.race} ${npcDetails.class}, with a background that matches this backstory: ${npcDetails.backstory}. Fantasy art style, high detail, expressive character.`;
+  
+      // Send request to OpenAI's image generation API
+      const response = await axios.post(
+        'https://api.openai.com/v1/images/generations',
+        {
+          prompt: prompt,
+          n: 1, // Only generating one image
+          size: "1024x1024" // Desired image dimensions
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+          },
+        }
+      );
+  
+      // Return the generated image URL
+      res.json({ imageUrl: response.data.data[0].url });
+    } catch (error) {
+      console.error("Error generating image:", error.response ? error.response.data : error.message);
+      res.status(500).send("Error generating image");
+    }
+  });
   
 // Start the server
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
