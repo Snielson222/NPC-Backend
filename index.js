@@ -101,7 +101,7 @@ app.post('/api/generate-image', async (req, res) => {
       const { npcDetails } = req.body;
   
       // Construct a descriptive prompt for DALL-E
-      const prompt = `A detailed 1024x1024 illustration of a ${npcDetails.race} ${npcDetails.class}, with a background that matches this backstory: ${npcDetails.backstory}. Fantasy art style, high detail, expressive character, attractive.`;
+      const prompt = `A detailed 1024x1024 illustration of ${npcDetails.name} a ${npcDetails.race} ${npcDetails.class}, with a background that matches this backstory: ${npcDetails.backstory}. Fantasy art style, high detail, expressive character, attractive, pay attention to backstory in particular.`;
   
       // Send request to OpenAI's image generation API
       const response = await axios.post(
