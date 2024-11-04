@@ -95,13 +95,20 @@ app.post('/api/chat', async (req, res) => {
     }
   });
 
-// Image generation endpoint
+// Image generation endpoint with customization options
 app.post('/api/generate-image', async (req, res) => {
     try {
-      const { npcDetails } = req.body;
+      const { npcDetails, weaponType, armorStyle, backgroundScenery } = req.body;
   
-      // Construct a descriptive prompt for DALL-E
-      const prompt = `A detailed 1024x1024 illustration of ${npcDetails.name} a ${npcDetails.race} ${npcDetails.class}, with a background that matches this backstory: ${npcDetails.backstory}. Fantasy art style, high detail, expressive character, attractive, pay attention to backstory in particular.`;
+      // Construct a descriptive prompt with customization options
+      let prompt = `A detailed 1024x1024 fantasy illustration of a ${npcDetails.race} ${npcDetails.class}, with a background that matches this backstory: ${npcDetails.backstory}.`;
+  
+      // Add customizations to the prompt if provided
+      if (weaponType) prompt += ` They are wielding a ${weaponType}.`;
+      if (armorStyle) prompt += ` They are wearing ${armorStyle} armor.`;
+      if (backgroundScenery) prompt += ` The background shows ${backgroundScenery}.`;
+  
+      prompt += " Fantasy art style, high detail, expressive character.";
   
       // Send request to OpenAI's image generation API
       const response = await axios.post(
@@ -125,6 +132,7 @@ app.post('/api/generate-image', async (req, res) => {
       res.status(500).send("Error generating image");
     }
   });
+  
   
 // Start the server
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
