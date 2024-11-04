@@ -132,7 +132,20 @@ app.post('/api/generate-image', async (req, res) => {
       res.status(500).send("Error generating image");
     }
   });
-  
+
+  // Import the random event generator
+const { getRandomEvent } = require('./npcEvents');
+
+// Event generation endpoint
+app.post('/api/generate-event', (req, res) => {
+  const { npcDetails } = req.body;
+
+  // Generate a random event based on race and class
+  const event = getRandomEvent(npcDetails.race, npcDetails.class);
+
+  res.json({ event });
+});
+
   
 // Start the server
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
