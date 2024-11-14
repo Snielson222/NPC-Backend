@@ -108,7 +108,7 @@ app.post('/api/generate-image', async (req, res) => {
       if (armorStyle) prompt += ` They are wearing ${armorStyle} armor.`;
       if (backgroundScenery) prompt += ` The background shows ${backgroundScenery}.`;
   
-      prompt += " Fantasy art style, high detail, expressive character.";
+      prompt += " Fantasy art style, high detail, expressive character, realistic face.";
   
       // Send request to OpenAI's image generation API
       const response = await axios.post(
